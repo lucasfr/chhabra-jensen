@@ -12,45 +12,12 @@ N = length(x);
 RmDq=0.95;
 RmFa=0.95;
 
-%% INITIALISATION OF MULTIFRACTAL MEASURES VARIABLES
-% AlphaMin = 999;
-% QAlphaMin = 999;
-% Fmn = 999;
-% Dqmn = 999;
-% AlphaMax =  -999.9;
-% QAlphaMax =  -999.9;
-% Fmx =  -999.9;
-% Dqmx = -999.9;
-% qMin = 0;
-% EDqmn = 0;
-% RDqmn = 0;
-% EAlphaMin = 0;
-% RAlphaMin = 0;	% Alfa minimo, erro e r2
-% qMax = 0;
-% EDqmx = 0;
-% RDqmx = 0;
-% EAlphaMax = 0;
-% RAlphaMax = 0;	% Alfa maximo, erro e r2
-% Alpha0 = 0;
-% EAlpha0 = 0;
-% RAlpha0 = 0;
-% D0 = 0;
-% RD0 = 0;
-% ED0 = 0;
-% D2 = -1;
-% D1 = -1;
-% RD1 = -1;
-% RD2 = -1;
-% ED1 = -1;
-% ED2 = -1;	 %-1 indicates that for the especific q (2 or 1) the R was not calculated
-% %END OF VARIABLE INITIALISATION
-
 %% ESTIMATING THE SUM OF ALL ELEMENTS IN THE TIME SERIES SEGMENT
 SumY = sum(y);
 
 
 %% THIS VARIABLE INDICATES THE NUMBER OF SCALES WHICH WILL BE REMOVED FROM THE PARTITION FUNCTION DURING THE CALCULUS
-% THIS IS MADE IN ORDER TO REMOVE CERTAIN SCALES THAT MIGHT NOT PRESENT
+% THIS IS MADE IN ORDER TO REMOVE CERTAIN SCALES THAT MIGHT NOT
 % FOLLOW THE SCALING PATTERN
 
 I=Io+1;
@@ -58,23 +25,20 @@ I=Io+1;
 %% LOOP OVER ALL THE Q VALUES, FROM THE INTIAL Q (qi) TO THE FINAL ONE (qf) WITH INCREASES OF (dq).
 % THIS LOOP IS INTENDED TO REALISE THE CALCULATIONS FOR ALL THE Q VALUES IN
 % ORDER TO DERIVE THE SPECTRA
-qix=((qf-qi)/dq)+1;
+
+qix=((qf-qi)/dq)+1;     %NUMBER OF VALUES OF q
+
 Mq = zeros(qix,Np);
 Md = zeros(qix,Np);
 spectr = zeros(qix,6);
 qDq = zeros(qix,5);
+
 for q=qi:dq:qf
     
     %% ALOCATING VARIABLES
     Ma = zeros(Np,1);
     Mf = zeros(Np,1);
-    %mye = zeros(Np,1);
-    %     for k=1:Np
-    %         Ma(k)=0;
-    %         Mf(k)=0;
-    %         qix=((q-qi)/dq)+1;
-    %         Md(qix,k)=0;
-    %     end
+    mye = zeros(Np,1);
     
     %% LOOP FOR ALL PARTITION SIZES
     for k=I:Np
@@ -147,7 +111,7 @@ for q=qi:dq:qf
     
     FAq = fitting(mye,Ma,Np);
     FFq = fitting(mye,Mf,Np);
-    FDq = fitting(mye',Md((((q-qi)/dq)+1),:),Np);
+    FDq = fitting(mye,Md((((q-qi)/dq)+1),:)',Np);
     
     if((q>(1-dq/2) && q<(1+dq/2)))
         
