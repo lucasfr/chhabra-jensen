@@ -112,39 +112,51 @@ for q=qi:dq:qf
         end
     end
     
-    FAq = fitting(mye,Ma,Np);
-    FFq = fitting(mye,Mf,Np);
-    FDq = fitting(mye,Md((((q-qi)/dq)+1),:)',Np);
     
-    if((q>(1-dq/2) && q<(1+dq/2)))
-        
-        Dq = FDq.sl;
-        
-    else
-        
-        Dq = FDq.sl/(q-1);
-        FDq.sd = FDq.sd/round(q-1); %***
-        
-    end
+    %% LINEAR REGRESSION AND EQUATION VARIABLES
+    FAq = fitlm(mye,Ma);
+    FFq = fitlm(mye,Mf);
     
-    if(FAq.r>=RmFa && FFq.r>=RmFa)
-        
-        spectr((q-qi)/dq+1,1) = FAq.sl;
-        spectr((q-qi)/dq+1,2) = FAq.sd;
-        spectr((q-qi)/dq+1,3) = FAq.r;
-        spectr((q-qi)/dq+1,4) = FFq.sl;
-        spectr((q-qi)/dq+1,5) = FFq.sd;
-        spectr((q-qi)/dq+1,6) = FFq.r;
-        
-    end
+       
+    spectr((q-qi)/dq+1,1) = FAq.Coefficients.Estimate(2);
+    spectr((q-qi)/dq+1,2) = FAq.Coefficients.SE(2);
+    spectr((q-qi)/dq+1,3) = FAq.Rsquared.Adjusted;
+    spectr((q-qi)/dq+1,4) = FFq.Coefficients.Estimate(2);
+    spectr((q-qi)/dq+1,5) = FFq.Coefficients.SE(2);
+    spectr((q-qi)/dq+1,6) = FFq.Rsquared.Adjusted;
     
-    if(FDq.r >= RmDq)
-        
-        qDq((q-qi)/dq+1,1) = q;
-        qDq((q-qi)/dq+1,2) = Dq;
-        qDq((q-qi)/dq+1,3) = Dq*(q-1);
-        qDq((q-qi)/dq+1,4) = FDq.sd;
-        qDq((q-qi)/dq+1,5) = FDq.r;
-        
-    end
+%     FFq = fitting(mye,Mf,Np);
+%     FDq = fitting(mye,Md((((q-qi)/dq)+1),:)',Np);
+%     
+%     if((q>(1-dq/2) && q<(1+dq/2)))
+%         
+%         Dq = FDq.sl;
+%         
+%     else
+%         
+%         Dq = FDq.sl/(q-1);
+%         FDq.sd = FDq.sd/round(q-1); %***
+%         
+%     end
+%     
+%     if(FAq.r>=RmFa && FFq.r>=RmFa)
+%         
+%         spectr((q-qi)/dq+1,1) = FAq.sl;
+%         spectr((q-qi)/dq+1,2) = FAq.sd;
+%         spectr((q-qi)/dq+1,3) = FAq.r;
+%         spectr((q-qi)/dq+1,4) = FFq.sl;
+%         spectr((q-qi)/dq+1,5) = FFq.sd;
+%         spectr((q-qi)/dq+1,6) = FFq.r;
+%         
+%     end
+%     
+%     if(FDq.r >= RmDq)
+%         
+%         qDq((q-qi)/dq+1,1) = q;
+%         qDq((q-qi)/dq+1,2) = Dq;
+%         qDq((q-qi)/dq+1,3) = Dq*(q-1);
+%         qDq((q-qi)/dq+1,4) = FDq.sd;
+%         qDq((q-qi)/dq+1,5) = FDq.r;
+%         
+%     end
 end
