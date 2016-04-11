@@ -1,8 +1,8 @@
 %function [Md] = ChhabraJensen(x, y, qi, qf, dq, Np, RmDq, RmFa, Io)
-qi=-5;
-qf=5;
-dq=1;
-Np=9;
+qi=-50;
+qf=50;
+dq=10;
+Np=8;
 Io=0;
 series = load('series.txt');
 x = series(:,1);
