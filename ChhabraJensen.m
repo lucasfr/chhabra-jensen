@@ -1,13 +1,12 @@
-%function [Md] = ChhabraJensen(x, y, qi, qf, dq, Np, RmDq, RmFa, Io)
-qi=-5;
-qf=5;
+%function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, RmDq, RmFa, Io)
+qi=-50;
+qf=50;
 dq=1;
 Np=9;
 Io=0;
 series = load('series.txt');
 x = series(:,1);
 y = series(:,2);
-N = length(x);
 RmDq=0.95;
 RmFa=0.95;
 
@@ -119,7 +118,7 @@ for q=qi:dq:qf
     %% LINEAR REGRESSION AND EQUATION VARIABLES
     FAq = fitlm(mye,Ma);
     FFq = fitlm(mye,Mf);
-    
+    FDq = fitlm(mye,Md((((q-qi)/dq)+1),:)');
        
     spectr((q-qi)/dq+1,1) = FAq.Coefficients.Estimate(2);
     spectr((q-qi)/dq+1,2) = FAq.Coefficients.SE(2);
@@ -127,39 +126,24 @@ for q=qi:dq:qf
     spectr((q-qi)/dq+1,4) = FFq.Coefficients.Estimate(2);
     spectr((q-qi)/dq+1,5) = FFq.Coefficients.SE(2);
     spectr((q-qi)/dq+1,6) = FFq.Rsquared.Adjusted;
+
     
-%     FFq = fitting(mye,Mf,Np);
-%     FDq = fitting(mye,Md((((q-qi)/dq)+1),:)',Np);
-%     
-%     if((q>(1-dq/2) && q<(1+dq/2)))
-%         
-%         Dq = FDq.sl;
-%         
-%     else
-%         
-%         Dq = FDq.sl/(q-1);
-%         FDq.sd = FDq.sd/round(q-1); %***
-%         
-%     end
-%     
-%     if(FAq.r>=RmFa && FFq.r>=RmFa)
-%         
-%         spectr((q-qi)/dq+1,1) = FAq.sl;
-%         spectr((q-qi)/dq+1,2) = FAq.sd;
-%         spectr((q-qi)/dq+1,3) = FAq.r;
-%         spectr((q-qi)/dq+1,4) = FFq.sl;
-%         spectr((q-qi)/dq+1,5) = FFq.sd;
-%         spectr((q-qi)/dq+1,6) = FFq.r;
-%         
-%     end
-%     
-%     if(FDq.r >= RmDq)
-%         
-%         qDq((q-qi)/dq+1,1) = q;
-%         qDq((q-qi)/dq+1,2) = Dq;
-%         qDq((q-qi)/dq+1,3) = Dq*(q-1);
-%         qDq((q-qi)/dq+1,4) = FDq.sd;
-%         qDq((q-qi)/dq+1,5) = FDq.r;
-%         
+    if((q>(1-dq/2) && q<(1+dq/2)))
+        
+        Dq = FDq.Coefficients.Estimate(2);
+        
+    else
+        
+        Dq = FDq.Coefficients.Estimate(2)/(q-1);
+        DqStd = FDq.Coefficients.SE(2)/abs(q-1);
+        
+    end
+    
+        qDq((q-qi)/dq+1,1) = q;
+        qDq((q-qi)/dq+1,2) = Dq;
+        qDq((q-qi)/dq+1,3) = Dq*(q-1);
+        qDq((q-qi)/dq+1,4) = DqStd;
+        qDq((q-qi)/dq+1,5) = FDq.Rsquared.Adjusted;
+
 %     end
 end
