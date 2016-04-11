@@ -22,7 +22,7 @@ SumY = sum(y);
 % THIS IS MADE IN ORDER TO REMOVE CERTAIN SCALES THAT MIGHT NOT
 % FOLLOW THE SCALING PATTERN
 
-I=Io+1;
+I=Io;
 
 %% LOOP OVER ALL THE Q VALUES, FROM THE INTIAL Q (qi) TO THE FINAL ONE (qf) WITH INCREASES OF (dq).
 % THIS LOOP IS INTENDED TO REALISE THE CALCULATIONS FOR ALL THE Q VALUES IN
@@ -30,17 +30,17 @@ I=Io+1;
 
 qix=((qf-qi)/dq)+1;     %NUMBER OF VALUES OF q
 
-Mq = zeros(qix,Np);
-Md = zeros(qix,Np);
+Mq = zeros(qix,Np+1);
+Md = zeros(qix,Np+1);
 spectr = zeros(qix,6);
 qDq = zeros(qix,5);
 
 for q=qi:dq:qf
     
     %% ALOCATING VARIABLES
-    Ma = zeros(Np,1);
-    Mf = zeros(Np,1);
-    mye = zeros(Np,1);
+    Ma = zeros(Np+1,1);
+    Mf = zeros(Np+1,1);
+    mye = zeros(Np+1,1);
     
     %% LOOP FOR ALL PARTITION SIZES
     for k=I:Np
@@ -48,8 +48,8 @@ for q=qi:dq:qf
         Nor=0;
         m=0;
         
-        Pr = 2^k;                   % MAXIMUM NUMBER OF POINTS (DIATIC SCALE)
-        E = 1/Pr;                       % SIZE OF EACH PARTITION
+        Pr = 2^k;                 % MAXIMUM NUMBER OF POINTS (DYADIC SCALE)
+        E = 1/Pr;                 % SIZE OF EACH PARTITION
         pos = k-I+1;
         mye(pos,1) = log10(E);
         val = mye(pos);
@@ -65,9 +65,10 @@ for q=qi:dq:qf
             %% ESTIMATING THE GENERIC MEASURES FAMILY (mu(q,episilon))
             if(p~=0)
                 
-                Nor = Nor + p^q;              %THIS IF STATEMENT AVOID ERRORS
-                %WHEN p AND q ARE EQUAL TO
-                %ZERO
+                Nor = Nor + p^q;
+                
+                %THIS IF STATEMENT AVOID ERRORS WHEN p AND q ARE EQUAL TO 0
+                
             end
             
         end
@@ -77,37 +78,36 @@ for q=qi:dq:qf
             p = calcSumM(x,y,(i-1)*E,i*E)/SumY;
             
             %% IF TO AVOID DIVERGENCE DUE TO NULL MEASURES
-            
             if(p~=0)
                 
-                if((1-dq/2) < q < (1+dq/2))
+                if(q > (1-dq/2) && q < (1+dq/2))
                     
                     Md(((q-qi)/dq)+1,k-I+1) = Md(((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
                     
                 else
                     
                     Md(((q-qi)/dq)+1,k-I+1)= Md(((q-qi)/dq)+1,k-I+1) + p^q;
-                    pq = p^q;					%To estimate f(alfa)
+                    pq = p^q;
                     mu= pq/Nor;
                     
-                    Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(p);        %STEP 1-B-B
-                    Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);       %STEP 1-B-A
+                    Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(p);
+                    Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);
                     
                 end
                 
-                mu = (p^q)/Nor;					% To estimate f(alfa)
+                mu = (p^q)/Nor;
                 Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(m);
                 Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);
                 
             end
             
-            % ENDIF
             
         end
         
-        if(~((1-dq/2) < q < (1+dq/2)))
+        if(~(q > (1-dq/2) && q < (1+dq/2)))
             
-            Md(((q-qi)/dq)+1,k-I+1)= log10(Md(((q-qi)/dq)+1,k-I+1));  %if q!=1
+            %IF q!=1
+            Md(((q-qi)/dq)+1,k-I+1)= log10(Md(((q-qi)/dq)+1,k-I+1));
             
         end
     end
@@ -135,7 +135,7 @@ for q=qi:dq:qf
         spectr((q-qi)/dq+1,4) = FFq.sl;
         spectr((q-qi)/dq+1,5) = FFq.sd;
         spectr((q-qi)/dq+1,6) = FFq.r;
-               
+        
     end
     
     if(FDq.r >= RmDq)
@@ -145,6 +145,6 @@ for q=qi:dq:qf
         qDq((q-qi)/dq+1,3) = Dq*(q-1);
         qDq((q-qi)/dq+1,4) = FDq.sd;
         qDq((q-qi)/dq+1,5) = FDq.r;
-
+        
     end
 end
