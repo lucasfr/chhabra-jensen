@@ -7,10 +7,12 @@ Io=0;
 series = load('series.txt');
 x = series(:,1);
 y = series(:,2);
-x =x/x(end);%x/norm(x,inf);
 N = length(x);
 RmDq=0.95;
 RmFa=0.95;
+
+%% NORMALISING THE VALUES OF THE VECTOR X
+x =x/x(end);
 
 %% ESTIMATING THE SUM OF ALL ELEMENTS IN THE TIME SERIES SEGMENT
 SumY = sum(y);
@@ -44,12 +46,12 @@ for q=qi:dq:qf
     for k=I:Np
         
         Nor=0;
-        p=0;
+        m=0;
         
         Pr = 2^k;                   % MAXIMUM NUMBER OF POINTS (DIATIC SCALE)
         E = 1/Pr;                       % SIZE OF EACH PARTITION
         pos = k-I+1;
-        mye(pos,1) = log10(E); % para optimizar
+        mye(pos,1) = log10(E);
         val = mye(pos);
         
         for i=1:Pr
@@ -63,8 +65,9 @@ for q=qi:dq:qf
             %% ESTIMATING THE GENERIC MEASURES FAMILY (mu(q,episilon))
             if(p~=0)
                 
-                Nor = Nor + p^q;
-                
+                Nor = Nor + p^q;              %THIS IF STATEMENT AVOID ERRORS
+                %WHEN p AND q ARE EQUAL TO
+                %ZERO
             end
             
         end
@@ -132,35 +135,7 @@ for q=qi:dq:qf
         spectr((q-qi)/dq+1,4) = FFq.sl;
         spectr((q-qi)/dq+1,5) = FFq.sd;
         spectr((q-qi)/dq+1,6) = FFq.r;
-        
-        %         if(FAq.sl>AlphaMax)
-        %             AlphaMax = FAq.sl;
-        %             EAlphaMax = FAq.sd;
-        %             RAlphaMax = FAq.r;
-        %             qAlphaMax = q;
-        %         end
-        %
-        %         if(FAq.sl<AlphaMin)
-        %             AlphaMin = FAq.sl;
-        %             EAlphaMin = FAq.sd;
-        %             RAlphaMin = FAq.r;
-        %             qAlphaMin = q;
-        %         end
-        %
-        %         if(FFq.sl<Fmn)
-        %             Fmn = FFq.sl;
-        %         end
-        %
-        %         if(FFq.sl>Fmx)
-        %             Fmx = FFq.sl;
-        %         end
-        %
-        %         if((q>(0-dq/2) && q<(0+dq/2)))
-        %             ao = FAq.sl;
-        %             EAo = FAq.sd;
-        %             RAo = FAq.r;
-        %         end
-        
+               
     end
     
     if(FDq.r >= RmDq)
@@ -170,50 +145,6 @@ for q=qi:dq:qf
         qDq((q-qi)/dq+1,3) = Dq*(q-1);
         qDq((q-qi)/dq+1,4) = FDq.sd;
         qDq((q-qi)/dq+1,5) = FDq.r;
-        
-        
-        %         if (q>(1-dq/2) && q<(1+dq/2))
-        %
-        %             EDq = FDq.ea;
-        %
-        %         else
-        %
-        %             EDq = round(FDq.ea/(q-1)); %*****
-        %
-        %         end
-        %
-        %         if(Dq>Dqmx)
-        %             Dqmx = Dq;
-        %             qMax = q;
-        %             EDqmx = EDq;
-        %             RDqmx = FDq.r;
-        %         end
-        %
-        %         if(Dq<Dqmn)
-        %             Dqmn = Dq;
-        %             qMin = q;
-        %             EDqmn = EDq;
-        %             RDqmn = FDq.r;
-        %         end
-        %
-        %         if((q>(0-dq/2) && q<(0+dq/2)))
-        %             Do = Dq;
-        %             RDo = FDq.r;
-        %             EDo = EDq;
-        %         end
-        %
-        %         if((q>(1-dq/2) && q<(1+dq/2)))
-        %             D1 = Dq;
-        %             RD1 = FDq.r;
-        %             ED1 = EDq;
-        %         end
-%         
-%         if((q>(2-dq/2) && q<(2+dq/2)))
-%             D2 = Dq;
-%             RD2 = FDq.r;
-%             ED2 = EDq;
-%         end
-        
+
     end
-    end
-    % END OF THE Q LOOP
+end
