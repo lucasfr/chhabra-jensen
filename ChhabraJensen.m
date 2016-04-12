@@ -1,14 +1,4 @@
-%function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, RmDq, RmFa, Io)
-qi=-50;
-qf=50;
-dq=0.2;
-Np=8;
-Io=0;
-series = load('series.txt');
-x = series(:,1);
-y = series(:,2);
-RmDq=0.95;
-RmFa=0.95;
+function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, Io)
 
 %% CALCULATING THE NUMBER OF ELEMENTS
 N = length(x);
@@ -88,11 +78,13 @@ for q=qi:dq:qf
                 
                 if(q > (1-dq/2) && q < (1+dq/2))
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1) = Md(int64((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
+                    Md(int64((q-qi)/dq)+1,k-I+1) = Md(int64((q-qi)/dq)+1,k-I+1)...
+                        + ((p*log10(p))/Nor);
                     
                 else
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1)= Md(int64((q-qi)/dq)+1,k-I+1) + p^q;
+                    Md(int64((q-qi)/dq)+1,k-I+1)= Md(int64((q-qi)/dq)+1,k-I+1)...
+                        + p^q;
 
                     
                 end
@@ -151,4 +143,5 @@ for q=qi:dq:qf
         qDq(int64((q-qi)/dq+1),5) = FDq.Rsquared.Adjusted;    % Dq-R2
 
 
+end
 end
