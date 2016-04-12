@@ -1,8 +1,8 @@
 %function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, RmDq, RmFa, Io)
 qi=-50;
 qf=50;
-dq=1;
-Np=9;
+dq=0.2;
+Np=8;
 Io=0;
 series = load('series.txt');
 x = series(:,1);
@@ -20,13 +20,17 @@ x =x/x(end);
 SumY = sum(y);
 
 
-%% THIS VARIABLE INDICATES THE NUMBER OF SCALES WHICH WILL BE REMOVED FROM THE PARTITION FUNCTION DURING THE CALCULUS
+%% THIS VARIABLE INDICATES THE NUMBER OF SCALES WHICH WILL BE REMOVED 
+%% FROM THE PARTITION FUNCTION DURING THE CALCULUS
+
 % THIS IS MADE IN ORDER TO REMOVE CERTAIN SCALES THAT MIGHT NOT
 % FOLLOW THE SCALING PATTERN
 
 I=Io;
 
-%% LOOP OVER ALL THE Q VALUES, FROM THE INTIAL Q (qi) TO THE FINAL ONE (qf) WITH INCREASES OF (dq).
+%% LOOP OVER ALL THE Q VALUES, FROM THE INTIAL Q (qi) TO THE FINAL ONE (qf)
+%% WITH INCREASES OF (dq).
+
 % THIS LOOP IS INTENDED TO REALISE THE CALCULATIONS FOR ALL THE Q VALUES IN
 % ORDER TO DERIVE THE SPECTRA
 
@@ -84,21 +88,17 @@ for q=qi:dq:qf
                 
                 if(q > (1-dq/2) && q < (1+dq/2))
                     
-                    Md(((q-qi)/dq)+1,k-I+1) = Md(((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
+                    Md(int64((q-qi)/dq)+1,k-I+1) = Md(int64((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
                     
                 else
                     
-                    Md(((q-qi)/dq)+1,k-I+1)= Md(((q-qi)/dq)+1,k-I+1) + p^q;
-                    pq = p^q;
-                    mu= pq/Nor;
-                    
-                    Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(p);
-                    Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);
+                    Md(int64((q-qi)/dq)+1,k-I+1)= Md(int64((q-qi)/dq)+1,k-I+1) + p^q;
+
                     
                 end
                 
                 mu = (p^q)/Nor;
-                Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(m);
+                Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(p);
                 Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);
                 
             end
@@ -106,10 +106,10 @@ for q=qi:dq:qf
             
         end
         
+        %% IF STATEMENT FOR q!=1
         if(~(q > (1-dq/2) && q < (1+dq/2)))
             
-            %IF q!=1
-            Md(((q-qi)/dq)+1,k-I+1)= log10(Md(((q-qi)/dq)+1,k-I+1));
+            Md(int64((q-qi)/dq)+1,k-I+1)= log10(Md(int64((q-qi)/dq)+1,k-I+1));
             
         end
     end
@@ -118,16 +118,21 @@ for q=qi:dq:qf
     %% LINEAR REGRESSION AND EQUATION VARIABLES
     FAq = fitlm(mye,Ma);
     FFq = fitlm(mye,Mf);
-    FDq = fitlm(mye,Md((((q-qi)/dq)+1),:)');
+    FDq = fitlm(mye,Md((int64((q-qi)/dq)+1),:)');
+    
+    %% f(alpha) SPECTRUM VARIABLES
        
-    spectr((q-qi)/dq+1,1) = FAq.Coefficients.Estimate(2);
-    spectr((q-qi)/dq+1,2) = FAq.Coefficients.SE(2);
-    spectr((q-qi)/dq+1,3) = FAq.Rsquared.Adjusted;
-    spectr((q-qi)/dq+1,4) = FFq.Coefficients.Estimate(2);
-    spectr((q-qi)/dq+1,5) = FFq.Coefficients.SE(2);
-    spectr((q-qi)/dq+1,6) = FFq.Rsquared.Adjusted;
+    spectr(int64((q-qi)/dq+1),1) = FAq.Coefficients.Estimate(2);   % alpha
+    spectr(int64((q-qi)/dq+1),2) = FAq.Coefficients.SE(2);         % alpha-STD
+    spectr(int64((q-qi)/dq+1),3) = FAq.Rsquared.Adjusted;          % alpha-R2
+    spectr(int64((q-qi)/dq+1),4) = FFq.Coefficients.Estimate(2);   % f
+    spectr(int64((q-qi)/dq+1),5) = FFq.Coefficients.SE(2);         % f-STD
+    spectr(int64((q-qi)/dq+1),6) = FFq.Rsquared.Adjusted;          % f-R2
 
     
+    %% Dq SPECTRUM VARIABLES
+    
+    %% IF STATEMENT FOR q=1
     if((q>(1-dq/2) && q<(1+dq/2)))
         
         Dq = FDq.Coefficients.Estimate(2);
@@ -139,11 +144,11 @@ for q=qi:dq:qf
         
     end
     
-        qDq((q-qi)/dq+1,1) = q;
-        qDq((q-qi)/dq+1,2) = Dq;
-        qDq((q-qi)/dq+1,3) = Dq*(q-1);
-        qDq((q-qi)/dq+1,4) = DqStd;
-        qDq((q-qi)/dq+1,5) = FDq.Rsquared.Adjusted;
+        qDq(int64((q-qi)/dq+1),1) = q;                        % q
+        qDq(int64((q-qi)/dq+1),2) = Dq;                       % Dq
+        qDq(int64((q-qi)/dq+1),3) = Dq*(q-1);                 % tau(q)
+        qDq(int64((q-qi)/dq+1),4) = DqStd;                    % SE/(q-1)
+        qDq(int64((q-qi)/dq+1),5) = FDq.Rsquared.Adjusted;    % Dq-R2
 
-%     end
+
 end
