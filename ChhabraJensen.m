@@ -1,4 +1,4 @@
-function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, Io)
+function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
 
 %% CALCULATING THE NUMBER OF ELEMENTS
 N = length(x);
@@ -28,8 +28,8 @@ qix=((qf-qi)/dq)+1;     %NUMBER OF VALUES OF q
 
 Mq = zeros(qix,Np+1);
 Md = zeros(qix,Np+1);
-spectr = zeros(qix,6);
-qDq = zeros(qix,5);
+spectr = [];
+qDq = [];
 
 for q=qi:dq:qf
     
@@ -48,7 +48,6 @@ for q=qi:dq:qf
         E = 1/Pr;                 % SIZE OF EACH PARTITION
         pos = k-I+1;
         mye(pos,1) = log10(E);
-        val = mye(pos);
         
         for i=1:Pr
             
@@ -113,14 +112,17 @@ for q=qi:dq:qf
     FDq = fitlm(mye,Md((int64((q-qi)/dq)+1),:)');
     
     %% f(alpha) SPECTRUM VARIABLES
-       
-    spectr(int64((q-qi)/dq+1),1) = FAq.Coefficients.Estimate(2);   % alpha
-    spectr(int64((q-qi)/dq+1),2) = FAq.Coefficients.SE(2);         % alpha-STD
-    spectr(int64((q-qi)/dq+1),3) = FAq.Rsquared.Adjusted;          % alpha-R2
-    spectr(int64((q-qi)/dq+1),4) = FFq.Coefficients.Estimate(2);   % f
-    spectr(int64((q-qi)/dq+1),5) = FFq.Coefficients.SE(2);         % f-STD
-    spectr(int64((q-qi)/dq+1),6) = FFq.Rsquared.Adjusted;          % f-R2
-
+    if ( FAq.Rsquared.Adjusted >= Ra && FFq.Rsquared.Adjusted >= Ra)
+        
+        spectr(end+1,1) = q;                           % q
+        spectr(end,2) = FAq.Coefficients.Estimate(2);% alpha
+        spectr(end,3) = FAq.Coefficients.SE(2);      % alpha-STD
+        spectr(end,4) = FAq.Rsquared.Adjusted;       % alpha-R2
+        spectr(end,5) = FFq.Coefficients.Estimate(2);% f
+        spectr(end,6) = FFq.Coefficients.SE(2);      % f-STD
+        spectr(end,7) = FFq.Rsquared.Adjusted;       % f-R2
+    
+    end
     
     %% Dq SPECTRUM VARIABLES
     
@@ -136,11 +138,15 @@ for q=qi:dq:qf
         
     end
     
-        qDq(int64((q-qi)/dq+1),1) = q;                        % q
-        qDq(int64((q-qi)/dq+1),2) = Dq;                       % Dq
-        qDq(int64((q-qi)/dq+1),3) = Dq*(q-1);                 % tau(q)
-        qDq(int64((q-qi)/dq+1),4) = DqStd;                    % SE/(q-1)
-        qDq(int64((q-qi)/dq+1),5) = FDq.Rsquared.Adjusted;    % Dq-R2
+    if ( FDq.Rsquared.Adjusted >= Rq)
+        
+        qDq(end+1,1) = q;                        % q
+        qDq(end,2) = Dq;                       % Dq
+        qDq(end,3) = Dq*(q-1);                 % tau(q)
+        qDq(end,4) = DqStd;                    % SE/(q-1)
+        qDq(end,5) = FDq.Rsquared.Adjusted;    % Dq-R2
+           
+    end
 
 
 end
