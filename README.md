@@ -6,3 +6,13 @@ Chhabra, A. & Jensen, R., 1989. Direct determination of the f(α) singularity sp
 Function:
 
 function [qDq,spectr,partFunc] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
+
+%% The variables of the function chj correspond to:
+
+qi - initial value of q
+qf - final value of q
+dq - increment to made on the q value at each iteration
+rq and ra - minimum r2 value for q and alpha, respectively
+io - initial scale (dyadic)
+x and y - x and y coordinates of the input time series
+
