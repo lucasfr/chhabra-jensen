@@ -1,7 +1,4 @@
-function [qDq,spectr] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
-
-%% CALCULATING THE NUMBER OF ELEMENTS
-N = length(x);
+function [qDq,spectr,partFunc] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
 
 %% NORMALISING THE VALUES OF THE VECTOR X
 x =x/x(end);
@@ -25,18 +22,16 @@ I=Io;
 % ORDER TO DERIVE THE SPECTRA
 
 qix=((qf-qi)/dq)+1;     %NUMBER OF VALUES OF q
-
-Mq = zeros(qix,Np+1);
-Md = zeros(qix,Np+1);
+Md = zeros(qix,Np-Io+1);
 spectr = [];
 qDq = [];
 
 for q=qi:dq:qf
     
     %% ALOCATING VARIABLES
-    Ma = zeros(Np+1,1);
-    Mf = zeros(Np+1,1);
-    mye = zeros(Np+1,1);
+    Ma = zeros(Np-Io+1,1);
+    Mf = zeros(Np-Io+1,1);
+    mye = zeros(Np-Io+1,1);
     
     %% LOOP FOR ALL PARTITION SIZES
     for k=I:Np
@@ -114,7 +109,7 @@ for q=qi:dq:qf
     %% f(alpha) SPECTRUM VARIABLES
     if ( FAq.Rsquared.Adjusted >= Ra && FFq.Rsquared.Adjusted >= Ra)
         
-        spectr(end+1,1) = q;                           % q
+        spectr(end+1,1) = q;                         % q
         spectr(end,2) = FAq.Coefficients.Estimate(2);% alpha
         spectr(end,3) = FAq.Coefficients.SE(2);      % alpha-STD
         spectr(end,4) = FAq.Rsquared.Adjusted;       % alpha-R2
@@ -140,7 +135,7 @@ for q=qi:dq:qf
     
     if ( FDq.Rsquared.Adjusted >= Rq)
         
-        qDq(end+1,1) = q;                        % q
+        qDq(end+1,1) = q;                      % q
         qDq(end,2) = Dq;                       % Dq
         qDq(end,3) = Dq*(q-1);                 % tau(q)
         qDq(end,4) = DqStd;                    % SE/(q-1)
@@ -148,6 +143,23 @@ for q=qi:dq:qf
            
     end
 
+partFunc = vertcat(mye',Md);
 
 end
+end
+
+%% THIS ROUTINE WAS CREATED FOR THE ESTIMATION OF THE PARTITION FNCTIONS
+
+% IT WAS CONCEIVED FOR BEING USED WITH THE CHHABRA-JENSEN METHOD ALGORITHM,
+% ORIGINALLY
+
+% THE FUNCTION RECEIVES 5 INPUT VARIABLES, THE 'x' AND 'y' VARIABLES OF A TIME
+% SERIES, THE INITIAL POINT OF THE WINDOW 'EI' AND THE FINAL 'Ef' AND TOTAL
+% NUMBER OF POINTS IN THE TIME SERIES.
+
+function [mysum] = calcSumM(x, y, Ei, Ef)
+
+% THE VARIAVLE 'mysum' WILL RETURN THE SUM OF ALL ELEMENTS IN A GIVEN WINDOW
+mysum = sum(y(x>Ei & x<=Ef));
+
 end
