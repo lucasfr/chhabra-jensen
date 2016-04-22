@@ -128,22 +128,21 @@ for q=qi:dq:qf
     
     
     %% LINEAR REGRESSION AND EQUATION VARIABLES
-    FAq = fitlm(mye,Ma);
-    FFq = fitlm(mye,Mf);
-    FDq = fitlm(mye,Md((int64((q-qi)/dq)+1),:)');
+
+    [FAqb,~,FAqR2] = fitting(mye,Ma);
+    [FFqb,~,FFqR2] = fitting(mye,Mf);
+    [FDqb,~,FDqR2] = fitting(mye,Md((int64((q-qi)/dq)+1),:)');
     
     %% f(alpha) SPECTRUM VARIABLES
     %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
     %% THRESHOLD OR NOT - alpha AND f(alpha)
-    if ( FAq.Rsquared.Adjusted >= Ra && FFq.Rsquared.Adjusted >= Ra)
+    if ( FAqR2 >= Ra && FFqR2 >= Ra)
         
-        spectr(end+1,1) = q;                         % q
-        spectr(end,2) = FAq.Coefficients.Estimate(2);% alpha
-        spectr(end,3) = FAq.Coefficients.SE(2);      % alpha-STD
-        spectr(end,4) = FAq.Rsquared.Adjusted;       % alpha-R2
-        spectr(end,5) = FFq.Coefficients.Estimate(2);% f
-        spectr(end,6) = FFq.Coefficients.SE(2);      % f-STD
-        spectr(end,7) = FFq.Rsquared.Adjusted;       % f-R2
+        spectr(end+1,1) = q;              % q
+        spectr(end,2) = FAqb;             % alpha
+        spectr(end,3) = FAqR2;            % alpha-R2
+        spectr(end,4) = FFqb;             % f
+        spectr(end,5) = FFqR2;            % f-R2
         
     end
     
@@ -152,24 +151,22 @@ for q=qi:dq:qf
     %% IF STATEMENT FOR q=1
     if((q>(1-dq/2) && q<(1+dq/2)))
         
-        Dq = FDq.Coefficients.Estimate(2);
+        Dq = FDqb;
         
     else
         
-        Dq = FDq.Coefficients.Estimate(2)/(q-1);
-        DqStd = FDq.Coefficients.SE(2)/abs(q-1);
+        Dq = FDqb/(q-1);
         
     end
     
     %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
     %% THRESHOLD OR NOT - Dq
-    if ( FDq.Rsquared.Adjusted >= Rq)
+    if ( FDqR2 >= Rq)
         
         qDq(end+1,1) = q;                      % q
         qDq(end,2) = Dq;                       % Dq
         qDq(end,3) = Dq*(q-1);                 % tau(q)
-        qDq(end,4) = DqStd;                    % SE/(q-1)
-        qDq(end,5) = FDq.Rsquared.Adjusted;    % Dq-R2
+        qDq(end,4) = FDqR2;                    % Dq-R2
         
     end
     
@@ -192,5 +189,22 @@ function [mysum] = calcSumM(x, y, Ei, Ef)
 
 % THE VARIAVLE 'mysum' WILL RETURN THE SUM OF ALL ELEMENTS IN A GIVEN WINDOW
 mysum = sum(y(x>Ei & x<=Ef));
+
+end
+
+function [b,a,R2] = fitting(x,y)
+
+%% CALCULATING THE COEFFICIENTS
+X = [ones(length(x),1) x];
+B = X\y;
+
+b = B(2);
+a = B(1);
+
+%% ESTIMATING TE LINE
+yF = X*B;
+
+%% CALCULATING THE R2
+R2 = 1 - sum((y - yF).^2)/sum((y - mean(y)).^2);
 
 end
