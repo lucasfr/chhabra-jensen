@@ -2,7 +2,7 @@
 %% FROM TIME SERIES AND WAS DEVOLEP BASED ON A CODE ORIGINALLY WRITTEN BY
 %% J. G. V. MIRANDA.
 
-% L. G. S. FRANÇA - lucas.franca.14@ucl.ac.uk
+% L. G. S. FRANCA - lucas.franca.14@ucl.ac.uk
 
 %% THE VARIABLES OF THE FUNCTION CHJ CORRESPOND TO:
 
@@ -18,8 +18,10 @@
 %% AND M. P. LEITE FOR THE COMMENTS AND SUPPORT ON THE DEVELOPMENT OF THIS
 %% CODE
 
-
 function [qDq,spectr,partFunc] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
+
+%% CALCULATING THE NUMBER OF ELEMENTS
+N = length(x);
 
 %% NORMALISING THE VALUES OF THE VECTOR X
 x =x/x(end);
@@ -28,7 +30,7 @@ x =x/x(end);
 SumY = sum(y);
 
 
-%% THIS VARIABLE INDICATES THE NUMBER OF SCALES WHICH WILL BE REMOVED
+%% THIS VARIABLE INDICATES THE NUMBER OF SCALES WHICH WILL BE REMOVED 
 %% FROM THE PARTITION FUNCTION DURING THE CALCULUS
 
 % THIS IS MADE IN ORDER TO REMOVE CERTAIN SCALES THAT MIGHT NOT
@@ -36,30 +38,31 @@ SumY = sum(y);
 
 I=Io;
 
-%% VARIABLES ALLOCATION
-qix=((qf-qi)/dq)+1;     % NUMBER OF VALUES OF q
-Md = zeros(qix,Np-Io+1);
-spectr = [];
-qDq = [];
-
-
 %% LOOP OVER ALL THE Q VALUES, FROM THE INTIAL Q (qi) TO THE FINAL ONE (qf)
 %% WITH INCREASES OF (dq).
 
 % THIS LOOP IS INTENDED TO REALISE THE CALCULATIONS FOR ALL THE Q VALUES IN
 % ORDER TO DERIVE THE SPECTRA
 
+qix=((qf-qi)/dq)+1;     %NUMBER OF VALUES OF q
+
+Mq = zeros(qix,Np+1);
+Md = zeros(qix,Np+1);
+spectr = [];
+qDq = [];
+
 for q=qi:dq:qf
     
     %% ALOCATING VARIABLES
-    Ma = zeros(Np-Io+1,1);
-    Mf = zeros(Np-Io+1,1);
-    mye = zeros(Np-Io+1,1);
+    Ma = zeros(Np+1,1);
+    Mf = zeros(Np+1,1);
+    mye = zeros(Np+1,1);
     
     %% LOOP FOR ALL PARTITION SIZES
     for k=I:Np
         
         Nor=0;
+        m=0;
         
         Pr = 2^k;                 % MAXIMUM NUMBER OF POINTS (DYADIC SCALE)
         E = 1/Pr;                 % SIZE OF EACH PARTITION
@@ -85,30 +88,27 @@ for q=qi:dq:qf
             
         end
         
-        %% LOOP TO SCAN OVER ALL SEGMENTS
-        for i=1:Pr
+        for i=1:Pr % loop for scan over the segments
             
             p = calcSumM(x,y,(i-1)*E,i*E)/SumY;
             
-            %% IF TO ERROR WHEN p=0
+            %% IF TO AVOID DIVERGENCE DUE TO NULL MEASURES
             if(p~=0)
                 
-                %% IF STATEMENT TO AVOID ERRORS WHEN q=1
                 if(q > (1-dq/2) && q < (1+dq/2))
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1) = ...
-                        Md(int64((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
+                    Md(int64((q-qi)/dq)+1,k-I+1) = Md(int64((q-qi)/dq)+1,k-I+1)...
+                        + ((p*log10(p))/Nor);
                     
-                else                 
+                else
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1)= ...
-                        Md(int64((q-qi)/dq)+1,k-I+1)+ p^q;
-                                        
+                    Md(int64((q-qi)/dq)+1,k-I+1)= Md(int64((q-qi)/dq)+1,k-I+1)...
+                        + p^q;
+
+                    
                 end
                 
-                % GENERALISED MEASURE
                 mu = (p^q)/Nor;
-                
                 Ma(k-I+1,1) = Ma(k-I+1,1) + mu*log10(p);
                 Mf(k-I+1) = Mf(k-I+1) + mu*log10(mu);
                 
@@ -120,7 +120,6 @@ for q=qi:dq:qf
         %% IF STATEMENT FOR q!=1
         if(~(q > (1-dq/2) && q < (1+dq/2)))
             
-            % PARTITION FUNCTION ESTIMATION
             Md(int64((q-qi)/dq)+1,k-I+1)= log10(Md(int64((q-qi)/dq)+1,k-I+1));
             
         end
