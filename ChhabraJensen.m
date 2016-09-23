@@ -135,7 +135,7 @@ for q=qi:dq:qf
     %% f(alpha) SPECTRUM VARIABLES
     %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
     %% THRESHOLD OR NOT - alpha AND f(alpha)
-    if ( FAqR2 >= Ra && FFqR2 >= Ra)
+    if ( FAqR2 >= Ra && FFqR2 >= Ra || q==0)
         
         spectr(end+1,1) = q;              % q
         spectr(end,2) = FAqb;             % alpha
@@ -160,7 +160,7 @@ for q=qi:dq:qf
     
     %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
     %% THRESHOLD OR NOT - Dq
-    if ( FDqR2 >= Rq)
+    if ( FDqR2 >= Rq || q == 0)
         
         qDq(end+1,1) = q;                      % q
         qDq(end,2) = Dq;                       % Dq
