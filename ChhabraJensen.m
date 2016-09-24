@@ -58,7 +58,7 @@ for q=qi:dq:qf
     Mf = zeros(Np+1,1);
     mye = zeros(Np+1,1);
     
-    %% LOOP FOR ALL PARTITION SIZES
+    %% I - CALCULATING THE PARTITION FUNCTION
     for k=I:Np
         
         Nor=0;
@@ -71,13 +71,13 @@ for q=qi:dq:qf
         
         for i=1:Pr
             
-            %% ESTIMATING m(epsilon,i) AND p(epsilon)
+            % ESTIMATING m(epsilon,i) AND p(epsilon)
             
             m = calcSumM(x,y,(i-1)*E,i*E);
             p = m/SumY;
             
             
-            %% ESTIMATING THE GENERIC MEASURES FAMILY (mu(q,episilon))
+            % ESTIMATING THE GENERIC MEASURES FAMILY (mu(q,episilon))
             if(p~=0)
                 
                 Nor = Nor + p^q;
@@ -88,22 +88,23 @@ for q=qi:dq:qf
             
         end
         
+ %% II - CALCULATING THE MEASURES
         for i=1:Pr % loop for scan over the segments
             
             p = calcSumM(x,y,(i-1)*E,i*E)/SumY;
             
-            %% IF TO AVOID DIVERGENCE DUE TO NULL MEASURES
+            % IF TO AVOID DIVERGENCE DUE TO NULL MEASURES
             if(p~=0)
                 
                 if(q > (1-dq/2) && q < (1+dq/2))
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1) = Md(int64((q-qi)/dq)+1,k-I+1)...
-                        + ((p*log10(p))/Nor);
+                    Md(int64((q-qi)/dq)+1,k-I+1) = ...
+                        Md(int64((q-qi)/dq)+1,k-I+1) + ((p*log10(p))/Nor);
                     
                 else
                     
-                    Md(int64((q-qi)/dq)+1,k-I+1)= Md(int64((q-qi)/dq)+1,k-I+1)...
-                        + p^q;
+                    Md(int64((q-qi)/dq)+1,k-I+1)= ...
+                    Md(int64((q-qi)/dq)+1,k-I+1) + p^q;
 
                     
                 end
@@ -126,15 +127,15 @@ for q=qi:dq:qf
     end
     
     
-    %% LINEAR REGRESSION AND EQUATION VARIABLES
+    %% III - LINEAR REGRESSION AND EQUATION VARIABLES
 
     [FAqb,~,FAqR2] = fitting(mye,Ma);
     [FFqb,~,FFqR2] = fitting(mye,Mf);
     [FDqb,~,FDqR2] = fitting(mye,Md((int64((q-qi)/dq)+1),:)');
     
     %% f(alpha) SPECTRUM VARIABLES
-    %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
-    %% THRESHOLD OR NOT - alpha AND f(alpha)
+    % IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
+    % THRESHOLD OR NOT - alpha AND f(alpha)
     if ( FAqR2 >= Ra && FFqR2 >= Ra || q==0)
         
         spectr(end+1,1) = q;              % q
@@ -147,7 +148,7 @@ for q=qi:dq:qf
     
     %% Dq SPECTRUM VARIABLES
     
-    %% IF STATEMENT FOR q=1
+    % IF STATEMENT FOR q=1
     if((q>(1-dq/2) && q<(1+dq/2)))
         
         Dq = FDqb;
@@ -159,7 +160,7 @@ for q=qi:dq:qf
     end
     
     %% IF STATEMENT TO CHECK WHETHER THE R2 FOR THE FIT REACH A MINIMUM
-    %% THRESHOLD OR NOT - Dq
+    % THRESHOLD OR NOT - Dq
     if ( FDqR2 >= Rq || q == 0)
         
         qDq(end+1,1) = q;                      % q
@@ -169,7 +170,7 @@ for q=qi:dq:qf
         
     end
     
-    %% PARTITION FUNCTION TO EXPORT
+    %% PARTITION FUNCTION
     partFunc = vertcat(mye',Md);
     
 end
