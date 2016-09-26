@@ -5,7 +5,7 @@ Chhabra, A. & Jensen, R., 1989. Direct determination of the f(α) singularity sp
 
 Function:
 
-function [qDq,spectr,partFunc] = ChhabraJensen(x, y, qi, qf, dq, Np, Ra, Rq, Io)
+function [qDq,spectr,partFunc] = ChhabraJensen(y, qi, qf, dq, Np, Ra, Rq, Io)
 
 %% The variables of the function chj correspond to:
 
