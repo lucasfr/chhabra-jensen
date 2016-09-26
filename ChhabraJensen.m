@@ -182,10 +182,10 @@ end
 % THE FUNCTION RECEIVES 4 INPUT VARIABLES, THE 'x' AND 'y' VARIABLES OF A
 % TIME SERIES, THE INITIAL POINT OF THE WINDOW 'Ei' AND THE FINAL 'Ef'.
 
-function [mysum] = calcSumM(x, y, Ei, Ef)
+function [mySum] = calcSumM(x, y, Ei, Ef)
 
 % THE VARIAVLE 'mysum' WILL RETURN THE SUM OF ALL ELEMENTS IN A GIVEN WINDOW
-mysum = sum(y(x>Ei & x<=Ef));
+mySum = sum(y(x>Ei & x<=Ef));
 
 end
 
