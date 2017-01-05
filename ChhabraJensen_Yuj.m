@@ -6,7 +6,12 @@
 % This version is a faster and cleaner version of the previous codes
 % written by Yujiang.Wang@newcastle.ac.uk 15th Dec 2016. It fully utilises
 % the vectorisation in Matlab to speed up operations. A diagram summary of
-% the algorithm can be found on the author's website www.ywang.co.uk
+% the algorithm can be found on the author's website www.ywang.co.uk and on
+% github: https://github.com/lucasfr/chhabra-jensen/tree/Yujiangs-Branch-MATLAB-optimised
+
+% Version Jan 2017, written by Yujiang.Wang@newcastle.ac.uk: 
+% Removed the point 0/0 for regression of muscales against Ma, Mf, or Md. This is following the suggestion in the original Chhabra Jensen paper (see Fig. 2). 
+
 
 
 function [alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf]=ChhabraJensen_Yuj(Timeseries,qValues,scales)
@@ -27,13 +32,13 @@ function [alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf]=Chhab
 
     %% initialise
     nq=length(qValues);
-    ns=length(scales)+1;
+    ns=length(scales);
+    
     Ma=zeros(nq,ns);
     Mf=zeros(nq,ns);
     Md=zeros(nq,ns);
     
     muScale=-log10((2.^scales));
-    muScale=[muScale 0];
     
     alpha=zeros(nq,1);
     falpha=zeros(nq,1);
