@@ -5,6 +5,8 @@ Chhabra, A. & Jensen, R., 1989. Direct determination of the f(α) singularity sp
 
 Function:
 
+function [alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf]=ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
+
 %INPUT:
 %Timeseries, qValues, and scales are all row vectors
 %This function assumes that your time series is all positive values (sigm transform it if needed) 
