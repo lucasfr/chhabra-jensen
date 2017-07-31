@@ -1,3 +1,20 @@
+% Authors: Lucas França(1), Yujiang Wang(1,2,3), José Garcia Vivas Miranda(4)
+
+% 1 Department of Clinical and Experimental Epilepsy, UCL Institute of Neurology,
+% University College London, London, United Kingdom
+
+% 2 Interdisciplinary Computing and Complex BioSystems (ICOS) research group,
+% School of Computing Science, Newcastle University, Newcastle upon Tyne,
+% United Kingdom
+
+% 3 Institute of Neuroscience, Newcastle University, Newcastle upon Tyne,
+% United Kingdom
+
+% 4 Institute of Physics, Federal University of Bahia, Salvador, Bahia, Brazil
+
+% email address: lucas.franca.14@ucl.ac.uk, Yujiang.Wang@newcastle.ac.uk
+% Website: https://lucasfr.github.io/, http://xaphire.de/
+
 %%% THIS FUNCTION WAS DEVELOPED IN ORDER TO ESTIMATE THE MULTIFRACTAL SPECTRA 
 %%% FROM TIME SERIES AND WAS DEVOLEP BASED ON A CODE ORIGINALLY WRITTEN BY
 %%% J. G. V. MIRANDA, modified by L. G. S. FRANCA. It is based on the
