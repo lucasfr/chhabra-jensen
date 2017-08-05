@@ -53,6 +53,7 @@ ChhabraJensen_2d(Matrix,qValues,scales)
     
     muScale=-log10((2.^scales));
     %muScale=[muScale 0];
+    muScale = fliplr(muScale);
     
     alpha=zeros(nq,1);
     falpha=zeros(nq,1);
