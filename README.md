@@ -19,7 +19,8 @@ git clone https://github.com/lucasfr/chhabra-jensen
 The function runs on Matlab with the following command: 
 
 ```
-function [alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf]=ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
+[alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf] = ...
+ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
 ```
 
 ### INPUT:
