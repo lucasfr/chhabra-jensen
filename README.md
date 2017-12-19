@@ -1,4 +1,4 @@
-# chhabra-jensen
+# Chhabra-Jensen
 
 Multifractal analysis in Matlab based on the Chhabra-Jensen method. 
 
