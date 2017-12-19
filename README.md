@@ -14,9 +14,9 @@ Please, clone the repository with the following command.
 git clone https://github.com/lucasfr/chhabra-jensen
 ```
 
-Function:
+## Function:
 
-The function runs on Matlab with the following command. 
+The function runs on Matlab with the following command: 
 
 ```
 function [alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf]=ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
@@ -51,7 +51,7 @@ muScale, Md, Ma, and Mf are the basic matricies from which alpha, falpha, and Dq
 
 This software is licensed under an MIT License. 
 
-Copyright (c) 2017 [Lucas G S França](https://lucasfr.github.io/), [Yujiang Wang](http://xaphire.de/), José G V Miranda
+Copyright (c) 2017 [Lucas G S França](https://lucasfr.github.io/), [Yujiang Wang](http://xaphire.de/), José G V Miranda. 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
