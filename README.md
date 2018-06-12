@@ -1,8 +1,12 @@
 # Chhabra-Jensen
 
-Multifractal analysis in Matlab based on the Chhabra-Jensen method. 
+Multifractal analysis in Matlab based on the Chhabra-Jensen method.
 
-[PAPER TO CITE SOON!]
+:warning: Please, use the following preprint for references:
+
+França, Lucas G. S.; Miranda, José G. V.; Leite, Marco; Sharma, Niraj K.; Walker, Matthew C.; Lemieux, Louis; Wang, Yujiang. [Fractal and multifractal properties of electrographic recordings of human brain activity](https://arxiv.org/abs/1806.03889). arXiv preprint arXiv:1806.03889 (2018).
+
+The code was developed based on the method described in:
 
 Chhabra, A. & Jensen, R., 1989. [Direct determination of the f(α) singularity spectrum](http://link.aps.org/doi/10.1103/PhysRevA.40.5284). Physical Review Letters, 62(12), pp.1327–1330.
 
