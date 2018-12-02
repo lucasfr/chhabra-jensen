@@ -2,9 +2,9 @@
 
 Multifractal analysis in Matlab based on the Chhabra-Jensen method.
 
-:warning: Please, use the following preprint for references:
+:warning: Please, use the following article for references:
 
-França, Lucas G. S.; Miranda, José G. V.; Leite, Marco; Sharma, Niraj K.; Walker, Matthew C.; Lemieux, Louis; Wang, Yujiang. [Fractal and multifractal properties of electrographic recordings of human brain activity](https://arxiv.org/abs/1806.03889). arXiv preprint arXiv:1806.03889 (2018).
+França, L.G.S., Miranda, J.G.V., Leite, M., Sharma, N.K., Walker, M.C., Lemieux, L. and Wang, Y., 2018. [Fractal and Multifractal Properties of Electrographic Recordings of Human Brain Activity: Towards its Use as a Signal Feature for Machine Learning in Clinical Applications](https://www.frontiersin.org/articles/10.3389/fphys.2018.01767/). Frontiers in Physiology, 9, p.1767. DOI: 10.3389/fphys.2018.01767
 
 The code was developed based on the method described in:
 
