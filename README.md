@@ -32,7 +32,7 @@ ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
 An alternative Python version can be called with the following command:
 
 ```
-alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf = chj.getSpectrum(Timeseries,qValues,scales)
+alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf = getSpectrum(Timeseries,qValues,scales)
 ```
 
 
