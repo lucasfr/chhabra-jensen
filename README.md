@@ -10,7 +10,7 @@ The code was developed based on the method described in:
 
 Chhabra, A. & Jensen, R., 1989. [Direct determination of the f(α) singularity spectrum](http://link.aps.org/doi/10.1103/PhysRevA.40.5284). Physical Review Letters, 62(12), pp.1327–1330.
 
-:warning: A C version is also included. This was generated automatically on Matlab and has not been properly tested yet.
+:warning: A Python version is also included.
 
 ## Download
 
