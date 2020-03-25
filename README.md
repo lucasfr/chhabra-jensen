@@ -29,6 +29,13 @@ The function runs on Matlab with the following command:
 ChhabraJensen_Yuj_w0(Timeseries,qValues,scales)
 ```
 
+An alternative Python version can be called with the following command:
+
+```
+alpha,falpha,Dq,Rsqr_alpha,Rsqr_falpha,Rsqr_Dq,muScale,Md,Ma,Mf = chj.getSpectrum(Timeseries,qValues,scales)
+```
+
+
 ### INPUT:
 
 Timeseries, qValues, and scales are all row vectors 
@@ -54,11 +61,33 @@ falpha=falpha(kid);
 
 muScale, Md, Ma, and Mf are the basic matricies from which alpha, falpha, and Dq can be constructed by linear regression (see code below line 81 - 92 for details). They are included in the output mainly for completeness.
 
+### Docker
+
+To guarantee reproducibility and reduce issues involved in solving dependencies, the Python routine available here runs in a Docker container. Please download the last version of the software at their website: https://www.docker.com/
+
+To execute the Docker container with the defined settings, please run:
+
+```
+docker-compose up -d
+```
+
+The demo script can then be executed with the following command:
+
+```
+docker-compose exec jupyter /bin/sh -c "python /src/chj_demo.py"
+```
+
+After finishing the execution you can stop the Docker container with:
+
+```
+docker-compose down
+```
+
 ## LICENSE
 
 This software is licensed under an MIT License. 
 
-Copyright (c) 2017 [Lucas G S França](https://lucasfr.github.io/), [Yujiang Wang](http://xaphire.de/), José G V Miranda. 
+Copyright (c) 2020 [Lucas G S França](https://lucasfr.github.io/), [Yujiang Wang](http://xaphire.de/), José G V Miranda. 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
