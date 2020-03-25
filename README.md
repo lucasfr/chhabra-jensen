@@ -1,6 +1,6 @@
 # Chhabra-Jensen
 
-Multifractal analysis in Matlab based on the Chhabra-Jensen method.
+Multifractal analysis based on the Chhabra-Jensen method.
 
 :warning: Please, use the following article for references:
 
